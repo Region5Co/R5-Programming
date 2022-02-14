@@ -7,17 +7,28 @@ done = False
 
 pygame.joystick.init()
 
-# while not done:
-#    for event in pygame.event.get():
 joystick = pygame.joystick.Joystick(0)
 joystick.init()
 
-buttonA = joystick.get_button(1) # Things to configure
+clock = pygame.time.Clock()
+
 buttons = joystick.get_numbuttons()
 
-print(buttons)
-
 while not done:
-    for i in range(buttons):
-        button = joystick.get_button(i)
-        print("Button {:>2} value: {}".format(i, button))
+    # There's surely a better way to do this
+    for event in pygame.event.get():
+        pass
+
+    buttonA = joystick.get_button(0)
+    buttonB = joystick.get_button(1)
+
+    # insert update values here
+    if buttonA == 1:
+        print("A")
+    if buttonB == 1:
+        print("B")
+
+    # Limit fps to 60
+    clock.tick(60)
+
+pygame.quit()
