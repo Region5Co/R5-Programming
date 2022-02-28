@@ -23,7 +23,7 @@ p=GPIO.PWM(en,1000)
 
 p.start(25)
 
-usb_port = '/dev/ttyACM0' # find usb port name on raspberry pi
+usb_port = '/dev/ttyUSB0' # find usb port name on raspberry pi
 ser = serial.Serial(usb_port, 9600, timeout=1)
 ser.flush()
 
