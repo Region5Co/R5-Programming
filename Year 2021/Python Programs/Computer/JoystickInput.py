@@ -5,8 +5,8 @@ import serial
 
 usb_port = 'COM3'
 ser = serial.Serial(usb_port, 9600, timeout=1)  # add as serial windows edition
-# ser = serial.Serial()
-#  ser.open() I'm losing my gourd
+
+dead_zone = 25  # Arbitrary dead zone
 
 button_A = 0  # Button 0
 buttonB = 0  # Button 1
@@ -57,11 +57,14 @@ while not done:
     # button_right = joystick.get_button(5)
     # button_share = joystick.get_button(6)
 
-    left_y_axis = -joystick.get_axis(1)  # Propeller Left Thrust (negative to invert value)
+    left_y_axis = -joystick.get_axis(1) * 100   # Propeller Left Thrust (negative to invert value)
     left_y_axis_sign = copysign(1, left_y_axis)
-    left_y_axis_abs = round(abs(left_y_axis), 2)  # also rounds to two decimals
+    left_y_axis_abs = round(abs(left_y_axis))   # rounds to clean number
+    if left_y_axis_abs < dead_zone:             # apply dead zone
+        left_y_axis_abs = 0
 
-    right_y_axis = -joystick.get_axis(3)  # Propeller Right Thrust
+    #  Possible inputs
+    right_y_axis = -joystick.get_axis(3) * 100 # Propeller Right Thrust
     button_menu = joystick.get_button(7)  # Select: " "
     trigger_left = joystick.get_axis(4)  # Depth Down
     trigger_right = joystick.get_axis(5)  # Depth Up
