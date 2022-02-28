@@ -12,18 +12,19 @@ temp1 = 1
 left_y_axis_sign = 0
 left_y_axis_abs = 1
 button_A = 2
+button_menu = 3
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(in1,GPIO.OUT)
-GPIO.setup(in2,GPIO.OUT)
-GPIO.setup(en,GPIO.OUT)
-GPIO.output(in1,GPIO.LOW)
-GPIO.output(in2,GPIO.LOW)
-p=GPIO.PWM(en,1000)
+GPIO.setup(in1, GPIO.OUT)
+GPIO.setup(in2, GPIO.OUT)
+GPIO.setup(en, GPIO.OUT)
+GPIO.output(in1, GPIO.LOW)
+GPIO.output(in2, GPIO.LOW)
+p = GPIO.PWM(en, 1000)
 
 p.start(25)
 
-usb_port = '/dev/ttyUSB0' # find usb port name on raspberry pi
+usb_port = '/dev/ttyUSB0'  # find usb port name on raspberry pi
 ser = serial.Serial(usb_port, 9600, timeout=1)
 ser.flush()
 
@@ -34,25 +35,26 @@ input_array = []
 
 while True:
     if ser.in_waiting > 0:
-        line = ser.readline().decode('utf-8').rstrip() # we'll keep em for now
+        line = ser.readline().decode('utf-8').rstrip()  # we'll keep em for now
         input_array = json.loads(line)
 
-    x = input_array[0]
-
     # example motor code
-    if not input_array[button_A]:  # A button to enable
+    if not input_array[button_A]:   # Hold A button to enable (mainly for safety)
         GPIO.output(in1, GPIO.LOW)
         GPIO.output(in2, GPIO.LOW)
-    elif input_array[left_y_axis_sign] == 1:    # Forwards
-        GPIO.output(in1, GPIO.HIGH)
-        GPIO.output(in2, GPIO.LOW)
-    else:                                       # Backwards
-        GPIO.output(in1, GPIO.LOW)
-        GPIO.output(in2, GPIO.HIGH)
+    else:   # Adjust Direction
+        if input_array[left_y_axis_sign] == 1:  # Forwards
+            GPIO.output(in1, GPIO.HIGH)
+            GPIO.output(in2, GPIO.LOW)
+        else:
+            GPIO.output(in1, GPIO.LOW)  # Backwards
+            GPIO.output(in2, GPIO.HIGH)
+        p.ChangeDutyCycle(input_array[left_y_axis_abs])  # Adjust Speed
 
-    p.ChangeDutyCycle(input_array[left_y_axis_abs])
+    if input_array[button_menu]:  # In this case, a kill button?
+        GPIO.cleanup()
+        break
 
     sleep(0.5)
 
 ser.close()
-

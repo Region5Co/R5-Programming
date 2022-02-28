@@ -8,23 +8,23 @@ ser = serial.Serial(usb_port, 9600, timeout=1)  # add as serial windows edition
 # ser = serial.Serial()
 #  ser.open() I'm losing my gourd
 
-buttonA = 0  # Button 0
+button_A = 0  # Button 0
 buttonB = 0  # Button 1
-buttonX = 0  # Button 2
-buttonY = 0  # Button 3
-bumperLeft = 0  # Button 4
-bumperRight = 0  # Button 5
+button_X = 0  # Button 2
+button_Y = 0  # Button 3
+bumper_left = 0  # Button 4
+bumper_right = 0  # Button 5
 buttonShare = 0  # Button 6 yeah idk
-buttonMenu = 0  # Button 7
+button_menu = 0  # Button 7
 buttonLStick = 0  # Button 8
 buttonRStick = 0  # Button 9
 
 leftXAxis = 0  # Axis 0
 leftYAxis = 0  # Axis 1 (inverted i.e. up is negative values) thrust?
 rightXAxis = 0  # Axis 2
-rightYAxis = 0  # Axis 3
-leftTrigger = 0  # Axis 4 (neutral is -1)
-rightTrigger = 0  # Axis 5
+right_y_axis = 0  # Axis 3
+trigger_left = 0  # Axis 4 (neutral is -1)
+trigger_right = 0  # Axis 5
 
 inputArray = {}
 
@@ -49,42 +49,41 @@ while not done:
     for event in pygame.event.get():
         pass
 
-    buttonA = joystick.get_button(0)
-    # buttonB = joystick.get_button(1)
-    # buttonX = joystick.get_button(2)
-    # buttonY = joystick.get_button(3)
-    # buttonLeft = joystick.get_button(4)
-    # buttonRight = joystick.get_button(5)
-    # buttonShare = joystick.get_button(6)
+    button_A = joystick.get_button(0)
+    # button_B = joystick.get_button(1)
+    # button_X = joystick.get_button(2)
+    # button_Y = joystick.get_button(3)
+    # button_left = joystick.get_button(4)
+    # button_right = joystick.get_button(5)
+    # button_share = joystick.get_button(6)
 
-    leftYAxis = -joystick.get_axis(1)  # Propeller Left Thrust (negative to invert value)
-    leftYAxisSign = copysign(1, leftYAxis)
-    leftYAxisAbs = round(abs(leftYAxis), 2)  # also rounds to two decimals
+    left_y_axis = -joystick.get_axis(1)  # Propeller Left Thrust (negative to invert value)
+    left_y_axis_sign = copysign(1, left_y_axis)
+    left_y_axis_abs = round(abs(left_y_axis), 2)  # also rounds to two decimals
 
-
-    rightYAxis = -joystick.get_axis(3)  # Propeller Right Thrust
-    buttonMenu = joystick.get_button(7)  # Select: " "
-    leftTrigger = joystick.get_axis(4)  # Depth Down
-    rightTrigger = joystick.get_axis(5)  # Depth Up
-    bumperLeft = joystick.get_button(4)  # : " "
-    bumperRight = joystick.get_button(5)  # : " "
-    buttonX = joystick.get_button(2)  # Intake
-    buttonY = joystick.get_button(3)  # Output
+    right_y_axis = -joystick.get_axis(3)  # Propeller Right Thrust
+    button_menu = joystick.get_button(7)  # Select: " "
+    trigger_left = joystick.get_axis(4)  # Depth Down
+    trigger_right = joystick.get_axis(5)  # Depth Up
+    bumper_left = joystick.get_button(4)  # : " "
+    bumper_right = joystick.get_button(5)  # : " "
+    button_X = joystick.get_button(2)  # Intake
+    button_Y = joystick.get_button(3)  # Output
 
     # inputArray = [
-    #    leftYAxis,
-    #    rightYAxis,
-    #    buttonMenu,
-    #    leftTrigger,
-    #    rightTrigger,
-    #    bumperLeft,
-    #    bumperRight,
-    #    buttonX,
-    #    buttonY
-    #]
+    #    left_y_axis,
+    #    right_x_axis,
+    #    button_menu,
+    #    trigger_left,
+    #    trigger_right,
+    #    bumper_left,
+    #    bumper_right,
+    #    button_X,
+    #    button_Y
+    # ]
 
     # test input arrays
-    inputArray = [leftYAxisSign, leftYAxisAbs, buttonA]
+    inputArray = [left_y_axis_sign, left_y_axis_abs, button_A, button_menu]
     # inputArray = [buttonX, buttonY]
 
     jsonInputArray = json.dumps(inputArray).encode('utf-8')
