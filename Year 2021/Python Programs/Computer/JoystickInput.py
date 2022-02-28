@@ -1,10 +1,17 @@
 import pygame
 import json
 from math import copysign
-import serial
+# import serial
+import socket
 
-usb_port = 'COM3'
-ser = serial.Serial(usb_port, 9600, timeout=1)  # add as serial windows edition
+# usb_port = 'COM3'
+# ser = serial.Serial(usb_port, 9600, timeout=1)  # add as serial windows edition
+
+HOST = "localhost"
+PORT = 8001
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.bind((HOST, PORT))
 
 dead_zone = 25  # Arbitrary dead zone
 
@@ -41,6 +48,11 @@ joystick = pygame.joystick.Joystick(0)
 joystick.init()
 
 clock = pygame.time.Clock()
+
+print("Currently listening for connection...")
+sock.listen()
+conn, addr = sock.accept() # will wait to get joystick inputs until 1st successful connection
+print(f"Connected by {addr}")
 
 while not done:
     # There's surely a better way to do this
@@ -89,7 +101,9 @@ while not done:
 
     jsonInputArray = json.dumps(inputArray).encode('utf-8')
 
-    ser.write(jsonInputArray)  # this should work once connection is established
+    conn.sendall(jsonInputArray)
+
+    # ser.write(jsonInputArray)  # this should work once connection is established
 
     # Limit fps to 30
     clock.tick(30)
