@@ -2,9 +2,12 @@
 #git+https://github.com/piborg/Gamepad
 pygame
 
+<<<<<<< HEAD
 #### Communications ####
 pyserial
 
+=======
+>>>>>>> origin/joystick-development
 #### Motors ####
 
 #### Vision ####
