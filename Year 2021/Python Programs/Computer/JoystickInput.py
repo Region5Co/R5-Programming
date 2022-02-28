@@ -1,8 +1,9 @@
 import pygame
 import json
+from math import copysign
 import serial
 
-usb_port = '/Device/00000104'
+usb_port = 'COM3'
 ser = serial.Serial(usb_port, 9600, timeout=1)  # add as serial windows edition
 # ser = serial.Serial()
 #  ser.open() I'm losing my gourd
@@ -48,7 +49,7 @@ while not done:
     for event in pygame.event.get():
         pass
 
-    # buttonA = joystick.get_button(0)
+    buttonA = joystick.get_button(0)
     # buttonB = joystick.get_button(1)
     # buttonX = joystick.get_button(2)
     # buttonY = joystick.get_button(3)
@@ -56,7 +57,11 @@ while not done:
     # buttonRight = joystick.get_button(5)
     # buttonShare = joystick.get_button(6)
 
-    leftYAxis = -joystick.get_axis(1)  # Propeller Left Thrust (invert value)
+    leftYAxis = -joystick.get_axis(1)  # Propeller Left Thrust (negative to invert value)
+    leftYAxisSign = copysign(1, leftYAxis)
+    leftYAxisAbs = round(abs(leftYAxis), 2)  # also rounds to two decimals
+
+
     rightYAxis = -joystick.get_axis(3)  # Propeller Right Thrust
     buttonMenu = joystick.get_button(7)  # Select: " "
     leftTrigger = joystick.get_axis(4)  # Depth Down
@@ -78,31 +83,12 @@ while not done:
     #    buttonY
     #]
 
-    inputArray = [leftYAxis, rightYAxis]
+    # test input arrays
+    inputArray = [leftYAxisSign, leftYAxisAbs, buttonA]
+    # inputArray = [buttonX, buttonY]
 
     jsonInputArray = json.dumps(inputArray).encode('utf-8')
-    # ser.write(jsonInputArray)  # this should work once connection is established
-
-    # maybe it should be event handling style, that depends if I can juice
-    if leftYAxis > .8:
-        print("Left Forward")
-    elif leftYAxis < -.8:
-        print("Left Backward")
-
-    if rightYAxis > .8:
-        print("Right Forward")
-    elif rightYAxis < -.8:
-        print("Right Backward")
-
-    if leftTrigger > .8:
-        print("Depth Down")
-    elif rightTrigger > .8:
-        print("Depth Up")
-
-    if buttonX == 1:
-       print(jsonInputArray)
-    if buttonY == 1:
-        print("Output On")
+    ser.write(jsonInputArray)  # this should work once connection is established
 
     # Limit fps to 30
     clock.tick(30)
