@@ -26,7 +26,7 @@ right_y_axis = 0  # Axis 3
 trigger_left = 0  # Axis 4 (neutral is -1)
 trigger_right = 0  # Axis 5
 
-inputArray = {}
+inputArray = []
 
 # Hat we'll save for later (POV for my FRC heads)
 
@@ -41,8 +41,6 @@ joystick = pygame.joystick.Joystick(0)
 joystick.init()
 
 clock = pygame.time.Clock()
-
-buttons = joystick.get_numbuttons()
 
 while not done:
     # There's surely a better way to do this
@@ -90,6 +88,7 @@ while not done:
     # inputArray = [buttonX, buttonY]
 
     jsonInputArray = json.dumps(inputArray).encode('utf-8')
+
     ser.write(jsonInputArray)  # this should work once connection is established
 
     # Limit fps to 30
