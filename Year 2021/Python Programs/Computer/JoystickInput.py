@@ -7,7 +7,7 @@ import socket
 # usb_port = 'COM3'
 # ser = serial.Serial(usb_port, 9600, timeout=1)  # add as serial windows edition
 
-HOST = "10.1.2.200"
+HOST = "169.254.169.70"
 PORT = 8001
 
 TARGET_HOST = "10.1.2.199"
@@ -16,7 +16,8 @@ TARGET_PORT = 8001
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((HOST, PORT))
 
-dead_zone = 25  # Arbitrary dead zone
+dead_zone = 95  # Arbitrary dead zone
+min = 35
 
 button_A = 0  # Button 0
 buttonB = 0  # Button 1
@@ -72,12 +73,14 @@ while not done:
 
     left_y_axis = -joystick.get_axis(1) * 100   # Propeller Left Thrust (negative to invert value)
     left_y_axis_sign = copysign(1, left_y_axis)
-    left_y_axis_abs = round(abs(left_y_axis))   # rounds to clean number
-    if left_y_axis_abs < dead_zone:             # apply dead zone
+    left_y_axis_abs = 100 - round(abs(left_y_axis))   # rounds to clean number
+    if left_y_axis_abs > dead_zone:             # apply dead zone
         left_y_axis_abs = 0
+    elif left_y_axis_abs < min:
+        left_y_axis_abs = min
 
     #  Possible inputs
-    right_y_axis = -joystick.get_axis(3) * 100 # Propeller Right Thrust
+    right_y_axis = -joystick.get_axis(3) * 100  # Propeller Right Thrust
     button_menu = joystick.get_button(7)  # Select: " "
     trigger_left = joystick.get_axis(4)  # Depth Down
     trigger_right = joystick.get_axis(5)  # Depth Up
