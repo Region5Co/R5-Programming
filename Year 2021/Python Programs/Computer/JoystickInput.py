@@ -7,8 +7,11 @@ import socket
 # usb_port = 'COM3'
 # ser = serial.Serial(usb_port, 9600, timeout=1)  # add as serial windows edition
 
-HOST = "localhost"
+HOST = "10.1.2.200"
 PORT = 8001
+
+TARGET_HOST = "10.1.2.199"
+TARGET_PORT = 8001
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((HOST, PORT))
@@ -101,7 +104,17 @@ while not done:
 
     jsonInputArray = json.dumps(inputArray).encode('utf-8')
 
-    conn.sendall(jsonInputArray)
+    conn.send(jsonInputArray + b'\n')
+
+    if button_menu:  # kill button
+        break
+
+    # sock.sendto(jsonInputArray + b'\n', (TARGET_HOST, TARGET_PORT))
+
+    # print(jsonInputArray)
+
+    # conn.sendall(jsonInputArray)
+    # conn.sendall()
 
     # ser.write(jsonInputArray)  # this should work once connection is established
 
@@ -109,3 +122,4 @@ while not done:
     clock.tick(30)
 
 pygame.quit()
+sock.close()

@@ -35,6 +35,7 @@ p.start(25)
 # ser.flush()
 
 input_array = []
+buffer = b''
 # test array format
 # [button_A, button_B]
 # [left_y_axis, right_y_axis]
@@ -44,12 +45,14 @@ while True:
     #    line = ser.readline().decode('utf-8').rstrip()  # we'll keep em for now
     #    input_array = json.loads(line)
 
-    while True:
+    while b'\n' not in buffer:
         data = sock.recv(1024)
         if not data:
             break
-    line = data.decode('utf-8').rstrip()
-    input_array = json.loads(line)
+        buffer += data
+    line, sep, buffer = buffer.partition(b'\n')
+    decoded_line = line.decode('utf-8').rstrip()
+    input_array = json.loads(decoded_line)
 
     # example motor code
     if not input_array[button_A]:   # Hold A button to enable (mainly for safety)
