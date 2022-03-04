@@ -26,7 +26,6 @@ print("\n")
 while(1):
 
     x=input()
-    
     if x=='r':
         print("run")
         if(temp1==1):
