@@ -9,19 +9,23 @@ in2 = 23
 en = 25
 temp1=1
 
+#Broadcom SOC Channel
 GPIO.setmode(GPIO.BCM)
+#pin24
 GPIO.setup(in1,GPIO.OUT)
+#pin23
 GPIO.setup(in2,GPIO.OUT)
+#pin25
 GPIO.setup(en,GPIO.OUT)
+
+
 GPIO.output(in1,GPIO.LOW)
 GPIO.output(in2,GPIO.LOW)
+#Instance of PWM is created named p with channel =en frequency= 1000Hz
 p=GPIO.PWM(en,1000)
-
+#PWM Is started default speed & direction of motor is LOW & Forward
 p.start(25)
-print("\n")
-print("The default speed & direction of motor is LOW & Forward.....")
-print("r-run s-stop f-forward b-backward l-low m-medium h-high e-exit")
-print("\n")    
+    
 
 while(1):
 
