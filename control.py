@@ -9,6 +9,7 @@ class Motor:
     def __init__(self,p1,p2,enable):
         self.pin1=p1
         self.pin2=p2
+        self.enable=enable
         GPIO.setup(self.pin1,GPIO.OUT)
         GPIO.setup(self.pin2,GPIO.OUT)
         GPIO.setup(self.enable,GPIO.OUT)
@@ -29,13 +30,13 @@ class Motor:
         GPIO.output(self.pin2, 0)
 
 
-    def setDuty(self, level):  #l=low=75%, m=medium=50%, h=high=40%
+    def setDuty(self, level):  #l=low=25%, m=medium=50%, h=high=75%
         if level=='l':
-            self.pwm.ChangeDutyCycle(75)
+            self.pwm.ChangeDutyCycle(25)
         if level=='m':
             self.pwm.ChangeDutyCycle(50)
         if level=='h':
-            self.pwm.ChangeDutyCycle(40)
+            self.pwm.ChangeDutyCycle(75)
 
  
 def analogsticks(motor: Motor, value : int):
@@ -45,7 +46,7 @@ def analogsticks(motor: Motor, value : int):
         motor.setDuty('h')
     elif temp > 16000:
         motor.setDuty('m')
-    elif temp > 0:
+    elif temp > 8000:
         motor.setDuty('l')
     else:
         motor.stop()
@@ -55,7 +56,7 @@ def triggers(motor: Motor):
     temp = max(rt_intensity,lt_intensity)
     if temp > 250:
         motor.setDuty('h')
-    elif temp > 0:
+    elif temp > 1:
         motor.setDuty('l')
     else:
         motor.stop()
@@ -63,8 +64,8 @@ def triggers(motor: Motor):
 
 #We need to assign these pins
 vertmotor = Motor(1,2,3)
-leftmotor = Motor(1,2,3)
-rightmotor = Motor(1,2,3)
+leftmotor = Motor(23,24,18)
+rightmotor = Motor(25,8,7)
 ballmotor = Motor(1,2,3)
 lt_intensity = 0
 rt_intensity = 0 
@@ -90,6 +91,9 @@ for event in xbox_read.event_stream(deadzone=0):
         else:
             ballmotor.setDir(0)
             ballmotor.setDuty('h')
-        
+    if event.key=='select':
+        if event.key==1:
+            GPIO.cleanup()
+            break
 
 

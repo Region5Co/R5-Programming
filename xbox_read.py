@@ -26,7 +26,7 @@ def event_stream(deadzone=0,scale=32768):
         line = subprocess.readline()
         if 'Error' in line:
             raise ValueError(line)
-        data = filter(bool,s.split(line[:-1]))
+        data = list(filter(bool,s.split(line[:-1])))
         if len(data)==42:
             # Break input string into a data dict
             data = { data[x]:int(data[x+1]) for x in range(0,len(data),2) }
@@ -34,8 +34,8 @@ def event_stream(deadzone=0,scale=32768):
                 _data = data
                 continue
             for key in data:
-                if key=='X1' or key=='X2' or key=='Y1' or key=='Y2':
-                    data[key] = apply_deadzone(data[key],deadzone,scale)
+                #if key=='X1' or key=='X2' or key=='Y1' or key=='Y2':
+                    #data[key] = apply_deadzone(data[key],deadzone,scale)
                 if data[key]==_data[key]: continue
                 event = Event(key,data[key],_data[key])
                 yield event
