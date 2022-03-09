@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-from tokenize import String
-from numpy import character
 import RPi.GPIO as GPIO
 import xbox_read
 import time
@@ -33,7 +31,7 @@ class Motor:
         GPIO.output(self.pin2, 0)
 
 
-    def setDuty(self, level: character):  #l=low=75%, m=medium=50%, h=high=40%
+    def setDuty(self, level):  #l=low=75%, m=medium=50%, h=high=40%
         if level=='l':
             self.pwm.ChangeDutyCycle(75)
         if level=='m':
