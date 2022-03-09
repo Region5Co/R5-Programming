@@ -4,8 +4,6 @@ import RPi.GPIO as GPIO
 import xbox_read
 import time
 
-#pwm.setPWMFreq(60)
-
 GPIO.setmode(GPIO.BCM)
 class Motor:
     def __init__(self,p1,p2,enable):
@@ -13,7 +11,7 @@ class Motor:
         self.pin2=p2
         GPIO.setup(self.pin1,GPIO.OUT)
         GPIO.setup(self.pin2,GPIO.OUT)
-        GPIO.setup(self.en,GPIO.OUT)
+        GPIO.setup(self.enable,GPIO.OUT)
         self.pwm=GPIO.PWM(enable,1000)
 
 
@@ -61,15 +59,18 @@ def triggers(motor: Motor):
     elif temp > 0:
         motor.setDuty('l')
     else:
-        motor.stop
+        motor.stop()
 
+        
 #We need to assign these pins
 vertmotor = Motor(1,2,3)
 leftmotor = Motor(1,2,3)
 rightmotor = Motor(1,2,3)
 lt_intensity = 0
-rt_intensity = 0
-for event in xbox_read.event_stream(deadzone=12000):
+rt_intensity = 0 
+#pwm.setPWMFreq(60) 
+       
+for event in xbox_read.event_stream(deadzone=0):
     if event.key=='RT' or event.key=='LT':
         if event.key=='RT':
             rt_intensity = event.value
