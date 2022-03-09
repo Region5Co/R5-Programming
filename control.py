@@ -13,7 +13,7 @@ class Motor:
         GPIO.setup(self.pin2,GPIO.OUT)
         GPIO.setup(self.enable,GPIO.OUT)
         self.pwm=GPIO.PWM(enable,1000)
-
+        self.pwm.start(25)
 
     def setDir(self, forward):  #1=true=forward, 0=false=backwards
         if(forward):
@@ -50,9 +50,8 @@ def analogsticks(motor: Motor, value : int):
     else:
         motor.stop()
 
-#Right trigger is upwards, left trigger is downwards
 def triggers(motor: Motor):
-    motor.setDir(rt_intensity>=lt_intensity)
+    motor.setDir(lt_intensity>=rt_intensity)  #Left trigger is upwards, right trigger is downwards
     temp = max(rt_intensity,lt_intensity)
     if temp > 250:
         motor.setDuty('h')
@@ -60,12 +59,13 @@ def triggers(motor: Motor):
         motor.setDuty('l')
     else:
         motor.stop()
-
         
+
 #We need to assign these pins
 vertmotor = Motor(1,2,3)
 leftmotor = Motor(1,2,3)
 rightmotor = Motor(1,2,3)
+ballmotor = Motor(1,2,3)
 lt_intensity = 0
 rt_intensity = 0 
 #pwm.setPWMFreq(60) 
@@ -81,5 +81,15 @@ for event in xbox_read.event_stream(deadzone=0):
         analogsticks(leftmotor, event.value)
     if event.key=='Y2':
         analogsticks(rightmotor, event.value)
+    if event.key=='X' or event.key=='Y':
+        if event.value == 0:
+            ballmotor.stop()
+        elif event.key=='X':
+            ballmotor.setDir(1)
+            ballmotor.setDuty('h')
+        else:
+            ballmotor.setDir(0)
+            ballmotor.setDuty('h')
+        
 
 
