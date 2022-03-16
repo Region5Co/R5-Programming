@@ -63,10 +63,10 @@ def triggers(motor: Motor):
         
 
 #We need to assign these pins
-vertmotor = Motor(1,2,3)
+vertmotor = Motor(2,3,4)
 leftmotor = Motor(23,24,18)
 rightmotor = Motor(25,8,7)
-ballmotor = Motor(1,2,3)
+ballmotor = Motor(17,27,22)
 lt_intensity = 0
 rt_intensity = 0 
 #pwm.setPWMFreq(60) 
