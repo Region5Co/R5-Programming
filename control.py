@@ -85,14 +85,14 @@ for event in xbox_read.event_stream(deadzone=0):
     if event.key=='X' or event.key=='Y':
         if event.value == 0:
             ballmotor.stop()
-        elif event.key=='X':
-            ballmotor.setDir(1)
-            ballmotor.setDuty('h')
         else:
-            ballmotor.setDir(0)
+            if event.key=='X':
+                ballmotor.setDir(1)
+            else:
+                ballmotor.setDir(0)
             ballmotor.setDuty('h')
-    if event.key=='select':
-        if event.key==1:
+    if event.key=='start': # kill button
+        if event.value==1:
             GPIO.cleanup()
             break
 
